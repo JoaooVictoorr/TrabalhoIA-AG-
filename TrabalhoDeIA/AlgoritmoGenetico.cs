@@ -10,6 +10,27 @@ namespace TrabalhoDeIA
     {
         static Random r = new Random();
         static int ultimaDirecao = -1;
+
+        public static List<Stack<Posicao>> CriarPopulacao(int quantidadePopulacao, int qtdDirecoes)
+        {
+            List<Stack<Posicao>> populacao = new List<Stack<Posicao>>();
+            Stack<Posicao> caminho = new Stack<Posicao>();
+            for (int i = 0; i < quantidadePopulacao; i++)
+            {
+                caminho = new Stack<Posicao>();
+                caminho = Caminho(qtdDirecoes, Program.posicaoAtual, caminho);
+                populacao.Add(caminho);
+                ReiniciarPosicaoAtual();
+            }
+            return populacao;
+        }
+
+        private static void ReiniciarPosicaoAtual()
+        {
+            Program.posicaoAtual.Linha = 1;
+            Program.posicaoAtual.Coluna = 0;
+        }
+
         public void Avaliacao(Queue<Posicao> caminho)
         {
             var labirinto = Labirinto.getLabirinto();
@@ -93,7 +114,7 @@ namespace TrabalhoDeIA
             if (resultado == 3)
             {
                 Program.posicaoAtual.Linha = Program.posicaoAtual.Linha + 1;
-                Program.posicaoAtual.Coluna =  Program.posicaoAtual.Coluna;
+                Program.posicaoAtual.Coluna = Program.posicaoAtual.Coluna;
                 return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
             }
 
