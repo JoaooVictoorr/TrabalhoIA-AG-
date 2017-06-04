@@ -9,6 +9,7 @@ namespace TrabalhoDeIA
     class AlgoritmoGenetico
     {
         static Random r = new Random();
+        static int ultimaDirecao = -1;
         public void Avaliacao(Queue<Posicao> caminho)
         {
             var labirinto = Labirinto.getLabirinto();
@@ -31,28 +32,69 @@ namespace TrabalhoDeIA
         {
             int resultado = RandomNumber();
 
+            if (ultimaDirecao == 0)
+            {
+                do
+                {
+                    resultado = RandomNumber();
+                }
+                while (resultado == 2);
+            }
+
+            else if (ultimaDirecao == 2)
+            {
+                do
+                {
+                    resultado = RandomNumber();
+                }
+                while (resultado == 0);
+            }
+
+            else if (ultimaDirecao == 1)
+            {
+                do
+                {
+                    resultado = RandomNumber();
+                }
+                while (resultado == 3);
+            }
+
+            else if (ultimaDirecao == 3)
+            {
+                do
+                {
+                    resultado = RandomNumber();
+                }
+                while (resultado == 1);
+            }
+            ultimaDirecao = resultado;
+
             if (resultado == 0)
             {
-                Program.posicaoAtual = new Posicao(posicaoAtual.Linha, posicaoAtual.Coluna - 1);
-                return new Posicao { Linha = posicaoAtual.Linha, Coluna = posicaoAtual.Coluna - 1 };
+                Program.posicaoAtual.Linha = Program.posicaoAtual.Linha;
+                Program.posicaoAtual.Coluna = Program.posicaoAtual.Coluna - 1;
+                return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
             }
 
             if (resultado == 1)
             {
-                Program.posicaoAtual = new Posicao(posicaoAtual.Linha - 1, posicaoAtual.Coluna);
-                return new Posicao { Linha = posicaoAtual.Linha - 1, Coluna = posicaoAtual.Coluna };
+                Program.posicaoAtual.Linha = Program.posicaoAtual.Linha - 1;
+                Program.posicaoAtual.Coluna = Program.posicaoAtual.Coluna;
+                return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
             }
 
             if (resultado == 2)
             {
-                Program.posicaoAtual = new Posicao(posicaoAtual.Linha, posicaoAtual.Coluna + 1);
-                return new Posicao { Linha = posicaoAtual.Linha, Coluna = posicaoAtual.Coluna + 1 };
+                Program.posicaoAtual.Linha = Program.posicaoAtual.Linha;
+                Program.posicaoAtual.Coluna = Program.posicaoAtual.Coluna + 1;
+                return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
             }
 
             if (resultado == 3)
             {
-                Program.posicaoAtual = new Posicao(posicaoAtual.Linha + 1, posicaoAtual.Coluna);
-                return new Posicao { Linha = posicaoAtual.Linha + 1, Coluna = posicaoAtual.Coluna };
+                Program.posicaoAtual.Linha = Program.posicaoAtual.Linha + 1;
+                Program.posicaoAtual.Coluna =  Program.posicaoAtual.Coluna;
+                return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
             }
 
             return null;
@@ -60,7 +102,7 @@ namespace TrabalhoDeIA
 
         private static int RandomNumber()
         {
-            return r.Next(0, 3);
+            return r.Next(0, 4);
         }
     }
 }
