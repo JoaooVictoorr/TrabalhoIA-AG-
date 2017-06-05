@@ -62,7 +62,7 @@ namespace TrabalhoDeIA
                     catch (Exception)
                     {
                         caminho[i].valorFitness = -10;
-                        //Se cair aqui, significa que o caminho seguiu pra fora do labirinto. Código a ser implementado para reduzir pontos.      
+                        //Se cair aqui, significa que o caminho seguiu pra fora do labirinto.      
                     }
 
                 }
