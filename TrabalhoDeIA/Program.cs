@@ -15,10 +15,11 @@ namespace TrabalhoDeIA
             var labirinto = Labirinto.getLabirinto();
             Stack<String[,]> pilhaLabirinto = new Stack<String[,]>();
             Stack<Posicao> pilha = new Stack<Posicao>();
-            List<Stack<Posicao>> populacao = new List<Stack<Posicao>>();
+            List<List<Posicao>> populacao = new List<List<Posicao>>();
 
             populacao = AlgoritmoGenetico.CriarPopulacao(5, 10);
-
+            AlgoritmoGenetico.Avaliacao(populacao);
+            
             do
             {
                 var caminhos = Labirinto.CaminhosLivres(labirinto, posicaoAtual);

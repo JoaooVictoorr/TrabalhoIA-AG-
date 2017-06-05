@@ -11,13 +11,13 @@ namespace TrabalhoDeIA
         static Random r = new Random();
         static int ultimaDirecao = -1;
 
-        public static List<Stack<Posicao>> CriarPopulacao(int quantidadePopulacao, int qtdDirecoes)
+        public static List<List<Posicao>> CriarPopulacao(int quantidadePopulacao, int qtdDirecoes)
         {
-            List<Stack<Posicao>> populacao = new List<Stack<Posicao>>();
-            Stack<Posicao> caminho = new Stack<Posicao>();
+            List<List<Posicao>> populacao = new List<List<Posicao>>();
+            List<Posicao> caminho = new List<Posicao>();
             for (int i = 0; i < quantidadePopulacao; i++)
             {
-                caminho = new Stack<Posicao>();
+                caminho = new List<Posicao>();
                 caminho = Caminho(qtdDirecoes, Program.posicaoAtual, caminho);
                 populacao.Add(caminho);
                 ReiniciarPosicaoAtual();
@@ -31,19 +31,65 @@ namespace TrabalhoDeIA
             Program.posicaoAtual.Coluna = 0;
         }
 
-        public void Avaliacao(Queue<Posicao> caminho)
+        public static void Avaliacao(List<List<Posicao>> populacao)
         {
+            List<ListaCaminhos> caminhosAux;
+            List<ListaCaminhos> caminhosAvaliados = new List<ListaCaminhos>(); ;
             var labirinto = Labirinto.getLabirinto();
-            Labirinto.Andar(labirinto, new Posicao { Linha = 1, Coluna = 0 }, caminho.Dequeue());
+            int i = -1;
+            int j = 0;
 
-            // Código de Avaliação do caminho
+            foreach (var caminho in populacao)
+            {
+                foreach (var direcoes in caminho)
+                {
+                    i++;
+                    try
+                    {
+                        if (labirinto[caminho[i].Linha, caminho[i].Coluna].Contains("X"))
+                        {
+                            caminho[i].valorFitness = -5;
+                        }
+                        else if(labirinto[caminho[i].Linha, caminho[i].Coluna].Contains(" "))
+                        {
+                            caminho[i].valorFitness = +10;
+                        }
+                        else if(labirinto[caminho[i].Linha, caminho[i].Coluna].Contains("S"))
+                        {
+                            caminho[i].valorFitness = +100;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        caminho[i].valorFitness = -10;
+                        //Se cair aqui, significa que o caminho seguiu pra fora do labirinto. Código a ser implementado para reduzir pontos.      
+                    }
+
+                }
+                caminhosAux = new List<ListaCaminhos> { new ListaCaminhos { caminhos = caminho, valorFitnessTotal = CalcularValorFitnessTotal(caminho) } };
+                caminhosAvaliados.Add(caminhosAux[0]);
+                i = -1;
+            }
+            caminhosAvaliados.Sort((x, y) => x.valorFitnessTotal.CompareTo(y.valorFitnessTotal));
         }
 
-        public static Stack<Posicao> Caminho(int quantDirecoes, Posicao posicaoAtual, Stack<Posicao> populacao)
+        public static int CalcularValorFitnessTotal(List<Posicao> caminho)
+        {
+            int calculoValorFitness = 0;
+
+            foreach (var direcao in caminho)
+            {
+                calculoValorFitness += direcao.valorFitness;
+            }
+
+            return calculoValorFitness;
+        }
+
+        public static List<Posicao> Caminho(int quantDirecoes, Posicao posicaoAtual, List<Posicao> populacao)
         {
             for (int i = 0; i < quantDirecoes; i++)
             {
-                populacao.Push(Sorteio(posicaoAtual));
+                populacao.Add(Sorteio(posicaoAtual));
             }
 
             return populacao;
