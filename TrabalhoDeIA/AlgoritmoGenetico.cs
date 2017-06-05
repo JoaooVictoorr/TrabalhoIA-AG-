@@ -31,7 +31,7 @@ namespace TrabalhoDeIA
             Program.posicaoAtual.Coluna = 0;
         }
 
-        public static void Avaliacao(List<List<Posicao>> populacao)
+        public static List<ListaCaminhos> Avaliacao(List<List<Posicao>> populacao)
         {
             List<ListaCaminhos> caminhosAux;
             List<ListaCaminhos> caminhosAvaliados = new List<ListaCaminhos>(); ;
@@ -69,7 +69,8 @@ namespace TrabalhoDeIA
                 caminhosAvaliados.Add(caminhosAux[0]);
                 i = -1;
             }
-            caminhosAvaliados.Sort((x, y) => x.valorFitnessTotal.CompareTo(y.valorFitnessTotal));
+          
+            return caminhosAvaliados.OrderByDescending(e => e.valorFitnessTotal).ToList(); 
         }
 
         public static int CalcularValorFitnessTotal(List<Posicao> caminho)
@@ -169,6 +170,11 @@ namespace TrabalhoDeIA
         private static int RandomNumber()
         {
             return r.Next(0, 4);
+        }
+
+        public static void melhoresPais(List<ListaCaminhos> listaPais)
+        {
+            listaPais.RemoveRange(3, 4);
         }
     }
 }

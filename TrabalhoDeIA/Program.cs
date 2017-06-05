@@ -17,8 +17,11 @@ namespace TrabalhoDeIA
             Stack<Posicao> pilha = new Stack<Posicao>();
             List<List<Posicao>> populacao = new List<List<Posicao>>();
 
-            populacao = AlgoritmoGenetico.CriarPopulacao(5, 10);
-            AlgoritmoGenetico.Avaliacao(populacao);
+            populacao = AlgoritmoGenetico.CriarPopulacao(8, 10);
+            List<ListaCaminhos> caminhosAvaliados =  new List<ListaCaminhos>(AlgoritmoGenetico.Avaliacao(populacao));
+            AlgoritmoGenetico.melhoresPais(caminhosAvaliados);
+            
+            
 
             do
             {
