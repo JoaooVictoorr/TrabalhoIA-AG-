@@ -50,11 +50,11 @@ namespace TrabalhoDeIA
                         {
                             caminho[i].valorFitness = -5;
                         }
-                        else if(labirinto[caminho[i].Linha, caminho[i].Coluna].Contains(" "))
+                        else if (labirinto[caminho[i].Linha, caminho[i].Coluna].Contains(" "))
                         {
                             caminho[i].valorFitness = +10;
                         }
-                        else if(labirinto[caminho[i].Linha, caminho[i].Coluna].Contains("S"))
+                        else if (labirinto[caminho[i].Linha, caminho[i].Coluna].Contains("C"))
                         {
                             caminho[i].valorFitness = +100;
                         }
@@ -64,7 +64,6 @@ namespace TrabalhoDeIA
                         caminho[i].valorFitness = -10;
                         //Se cair aqui, significa que o caminho seguiu pra fora do labirinto.      
                     }
-
                 }
                 caminhosAux = new List<ListaCaminhos> { new ListaCaminhos { caminhos = caminho, valorFitnessTotal = CalcularValorFitnessTotal(caminho) } };
                 caminhosAvaliados.Add(caminhosAux[0]);

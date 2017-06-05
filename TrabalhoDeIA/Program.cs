@@ -19,7 +19,7 @@ namespace TrabalhoDeIA
 
             populacao = AlgoritmoGenetico.CriarPopulacao(5, 10);
             AlgoritmoGenetico.Avaliacao(populacao);
-            
+
             do
             {
                 var caminhos = Labirinto.CaminhosLivres(labirinto, posicaoAtual);
