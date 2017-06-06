@@ -18,8 +18,10 @@ namespace TrabalhoDeIA
             List<List<Posicao>> populacao = new List<List<Posicao>>();
 
             populacao = AlgoritmoGenetico.CriarPopulacao(8, 10);
-            List<ListaCaminhos> caminhosAvaliados =  new List<ListaCaminhos>(AlgoritmoGenetico.Avaliacao(populacao));
-            AlgoritmoGenetico.melhoresPais(caminhosAvaliados);
+            var caminhosAvaliados = AlgoritmoGenetico.Avaliacao(populacao);
+            var paisSelecionados = AlgoritmoGenetico.melhoresPais(caminhosAvaliados);
+            AlgoritmoGenetico.orgia(paisSelecionados);
+
             
             
 

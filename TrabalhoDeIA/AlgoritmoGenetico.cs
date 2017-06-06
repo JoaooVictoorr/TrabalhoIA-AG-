@@ -172,9 +172,21 @@ namespace TrabalhoDeIA
             return r.Next(0, 4);
         }
 
-        public static void melhoresPais(List<ListaCaminhos> listaPais)
+        public static List<ListaCaminhos> melhoresPais(List<ListaCaminhos> listaPais)
         {
             listaPais.RemoveRange(3, 4);
+            return listaPais;
+        }
+
+        public static void orgia(List<ListaCaminhos> listaPais)
+        {
+            for(int i = 0; i < listaPais.Count; i++)
+            {
+                //for(int j = 0; j < listaPais[i][i]; j++)
+                //{
+
+                //}
+            }
         }
     }
 }
