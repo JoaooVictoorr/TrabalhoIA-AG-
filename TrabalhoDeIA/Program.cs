@@ -18,12 +18,17 @@ namespace TrabalhoDeIA
             List<List<Posicao>> populacao = new List<List<Posicao>>();
 
             populacao = AlgoritmoGenetico.CriarPopulacao(8, 10);
-            var caminhosAvaliados = AlgoritmoGenetico.Avaliacao(populacao);
-            var paisSelecionados = AlgoritmoGenetico.melhoresPais(caminhosAvaliados);
-            AlgoritmoGenetico.orgia(paisSelecionados);
 
-            
-            
+            //while (true) //while para testar a redução da população
+            //{
+                var caminhosAvaliados = AlgoritmoGenetico.Avaliacao(populacao);
+                var paisSelecionados = AlgoritmoGenetico.melhoresPais(caminhosAvaliados);
+                populacao = AlgoritmoGenetico.GerarFilhos(paisSelecionados);
+            //}
+
+
+
+
 
             do
             {

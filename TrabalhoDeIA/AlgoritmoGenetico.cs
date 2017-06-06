@@ -69,8 +69,8 @@ namespace TrabalhoDeIA
                 caminhosAvaliados.Add(caminhosAux[0]);
                 i = -1;
             }
-          
-            return caminhosAvaliados.OrderByDescending(e => e.valorFitnessTotal).ToList(); 
+
+            return caminhosAvaliados.OrderByDescending(e => e.valorFitnessTotal).ToList();
         }
 
         public static int CalcularValorFitnessTotal(List<Posicao> caminho)
@@ -167,26 +167,44 @@ namespace TrabalhoDeIA
             return null;
         }
 
-        private static int RandomNumber()
+        private static int RandomNumber(int min = 0, int max = 4)
         {
-            return r.Next(0, 4);
+            return r.Next(min, max);
         }
 
         public static List<ListaCaminhos> melhoresPais(List<ListaCaminhos> listaPais)
         {
-            listaPais.RemoveRange(3, 4);
+            var teste = listaPais.Count / 2;
+            listaPais.RemoveRange(teste, teste);
             return listaPais;
         }
 
-        public static void orgia(List<ListaCaminhos> listaPais)
+        public static List<List<Posicao>> GerarFilhos(List<ListaCaminhos> listaPais)
         {
-            for(int i = 0; i < listaPais.Count; i++)
+            List<List<Posicao>> listaParente = new List<List<Posicao>>();
+            List<Posicao> listaAux = new List<Posicao>();
+            int nAleatorio;
+            foreach (var cruzar in listaPais)
             {
-                //for(int j = 0; j < listaPais[i][i]; j++)
-                //{
-
-                //}
+                nAleatorio = RandomNumber(1, 4);
+                listaAux = Cruzar(cruzar.caminhos, listaPais[nAleatorio].caminhos);
+                listaParente.Add(listaAux);
             }
+            return listaParente;
+        }
+
+        public static List<Posicao> Cruzar(List<Posicao> listaPai, List<Posicao> listaMae)
+        {
+            List<Posicao> listaFilho = new List<Posicao>();
+            for (int i = 0; i < 5; i++)
+            {
+                listaFilho.Add(listaPai[i]);
+            }
+            for (int i = 5; i < 10; i++)
+            {
+                listaFilho.Add(listaMae[i]);
+            }
+            return listaFilho;
         }
     }
 }
