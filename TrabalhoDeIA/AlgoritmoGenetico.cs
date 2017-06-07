@@ -31,10 +31,10 @@ namespace TrabalhoDeIA
             Program.posicaoAtual.Coluna = 0;
         }
 
-        public static List<ListaCaminhos> Avaliacao(List<List<Posicao>> populacao)
+        public static List<ItemPopulacao> Avaliacao(List<List<Posicao>> populacao)
         {
-            List<ListaCaminhos> caminhosAux;
-            List<ListaCaminhos> caminhosAvaliados = new List<ListaCaminhos>(); ;
+            List<ItemPopulacao> caminhosAux;
+            List<ItemPopulacao> caminhosAvaliados = new List<ItemPopulacao>();
             var labirinto = Labirinto.getLabirinto();
             int i = -1;
             int j = 0;
@@ -65,12 +65,13 @@ namespace TrabalhoDeIA
                         //Se cair aqui, significa que o caminho seguiu pra fora do labirinto.      
                     }
                 }
-                caminhosAux = new List<ListaCaminhos> { new ListaCaminhos { caminhos = caminho, valorFitnessTotal = CalcularValorFitnessTotal(caminho) } };
+                caminhosAux = new List<ItemPopulacao> { new ItemPopulacao { caminhos = caminho, valorFitnessTotal = CalcularValorFitnessTotal(caminho) } };
                 caminhosAvaliados.Add(caminhosAux[0]);
                 i = -1;
             }
-
-            return caminhosAvaliados.OrderByDescending(e => e.valorFitnessTotal).ToList();
+            var populacaoAvaliada = caminhosAvaliados.OrderByDescending(e => e.valorFitnessTotal).ToList();
+            populacaoAvaliada.RemoveRange(populacaoAvaliada.Count / 2, populacaoAvaliada.Count / 2);
+            return populacaoAvaliada;
         }
 
         public static int CalcularValorFitnessTotal(List<Posicao> caminho)
@@ -172,39 +173,41 @@ namespace TrabalhoDeIA
             return r.Next(min, max);
         }
 
-        public static List<ListaCaminhos> melhoresPais(List<ListaCaminhos> listaPais)
+        public static void GerarFilhos(ref List<ItemPopulacao> listaPais)
         {
-            var teste = listaPais.Count / 2;
-            listaPais.RemoveRange(teste, teste);
-            return listaPais;
+            int index;
+            int tamanho = listaPais.Count;
+            for (int i = 0; i < tamanho; i++)
+            {
+                index = RandomNumber(0, listaPais.Count);
+                var filhoGerado = Cruzar(listaPais[i], listaPais[index]);
+                listaPais.Add(filhoGerado);
+            }
         }
 
-        public static List<List<Posicao>> GerarFilhos(List<ListaCaminhos> listaPais)
+        public static ItemPopulacao Cruzar(ItemPopulacao pai, ItemPopulacao mae)
         {
-            List<List<Posicao>> listaParente = new List<List<Posicao>>();
-            List<Posicao> listaAux = new List<Posicao>();
-            int nAleatorio;
-            foreach (var cruzar in listaPais)
+            ItemPopulacao filho = new ItemPopulacao();
+            filho.caminhos = new List<Posicao>();
+            
+            for (int i = 0; i < pai.caminhos.Count / 4; i++)
             {
-                nAleatorio = RandomNumber(1, 4);
-                listaAux = Cruzar(cruzar.caminhos, listaPais[nAleatorio].caminhos);
-                listaParente.Add(listaAux);
+                filho.caminhos.Add(pai.caminhos[i]);
             }
-            return listaParente;
-        }
+            for (int i = 0; i < mae.caminhos.Count / 4; i++)
+            {
+                filho.caminhos.Add(mae.caminhos[i]);
+            }
 
-        public static List<Posicao> Cruzar(List<Posicao> listaPai, List<Posicao> listaMae)
-        {
-            List<Posicao> listaFilho = new List<Posicao>();
-            for (int i = 0; i < 5; i++)
+            for (int i = pai.caminhos.Count / 2; i < pai.caminhos.Count / 4; i++)
             {
-                listaFilho.Add(listaPai[i]);
+                filho.caminhos.Add(pai.caminhos[i]);
             }
-            for (int i = 5; i < 10; i++)
+            for (int i = mae.caminhos.Count / 2; i < mae.caminhos.Count / 4; i++)
             {
-                listaFilho.Add(listaMae[i]);
+                filho.caminhos.Add(mae.caminhos[i]);
             }
-            return listaFilho;
+            return filho;
         }
     }
 }

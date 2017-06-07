@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlgoritmoGenetico.cs" />
-    <Compile Include="ListaCaminhos.cs" />
+    <Compile Include="ItemPopulacao.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Labirinto.cs" />

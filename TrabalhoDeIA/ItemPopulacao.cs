@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TrabalhoDeIA
 {
-    class ListaCaminhos
+    class ItemPopulacao
     {
         public int valorFitnessTotal;
         public List<Posicao> caminhos;

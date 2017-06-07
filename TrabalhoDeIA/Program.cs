@@ -17,17 +17,16 @@ namespace TrabalhoDeIA
             Stack<Posicao> pilha = new Stack<Posicao>();
             List<List<Posicao>> populacao = new List<List<Posicao>>();
 
-            populacao = AlgoritmoGenetico.CriarPopulacao(8, 10);
+            populacao = AlgoritmoGenetico.CriarPopulacao(100, 10);
 
-            //while (true) //while para testar a redução da população
-            //{
-                var caminhosAvaliados = AlgoritmoGenetico.Avaliacao(populacao);
-                var paisSelecionados = AlgoritmoGenetico.melhoresPais(caminhosAvaliados);
-                populacao = AlgoritmoGenetico.GerarFilhos(paisSelecionados);
-            //}
-
-
-
+            while (true) //while para testar a redução da população
+            {
+                var populacaoSobrevivente = AlgoritmoGenetico.Avaliacao(populacao);
+                if (populacaoSobrevivente.Any(x => x.valorFitnessTotal > 100))
+                    break;
+                    
+                AlgoritmoGenetico.GerarFilhos(ref populacaoSobrevivente);
+            }
 
 
             do
