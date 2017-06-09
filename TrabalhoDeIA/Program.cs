@@ -15,19 +15,18 @@ namespace TrabalhoDeIA
             var labirinto = Labirinto.getLabirinto();
             Stack<String[,]> pilhaLabirinto = new Stack<String[,]>();
             Stack<Posicao> pilha = new Stack<Posicao>();
-            List<List<Posicao>> populacao = new List<List<Posicao>>();
+            List<ItemPopulacao> populacao = new List<ItemPopulacao>();
 
-            populacao = AlgoritmoGenetico.CriarPopulacao(100, 10);
+            populacao = AlgoritmoGenetico.CriarPopulacao(10, 10);
+            var populacaoSobrevivente = AlgoritmoGenetico.Avaliacao(populacao);
 
             while (true) //while para testar a redução da população
             {
-                var populacaoSobrevivente = AlgoritmoGenetico.Avaliacao(populacao);
-                if (populacaoSobrevivente.Any(x => x.valorFitnessTotal > 100))
+                if (populacaoSobrevivente.Any(x => x.valorFitnessTotal > 1000))
                     break;
-                    
                 AlgoritmoGenetico.GerarFilhos(ref populacaoSobrevivente);
+                populacaoSobrevivente = AlgoritmoGenetico.Avaliacao(populacaoSobrevivente);
             }
-
 
             do
             {
