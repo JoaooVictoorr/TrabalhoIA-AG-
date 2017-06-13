@@ -15,9 +15,8 @@ namespace TrabalhoDeIA
             var labirinto = Labirinto.getLabirinto();
             Stack<String[,]> pilhaLabirinto = new Stack<String[,]>();
             Stack<Posicao> pilha = new Stack<Posicao>();
-            List<ItemPopulacao> populacao = new List<ItemPopulacao>();
 
-            populacao = AlgoritmoGenetico.CriarPopulacao(10, 10);
+            var populacao = AlgoritmoGenetico.GerarPopulacao(10, 10);
             var populacaoSobrevivente = AlgoritmoGenetico.Avaliacao(populacao);
 
             while (true) //while para testar a redução da população

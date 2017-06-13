@@ -1,209 +1,142 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TrabalhoDeIA
 {
-    class AlgoritmoGenetico
-    {
-        static Random r = new Random();
-        static int ultimaDirecao = -1;
+	class AlgoritmoGenetico
+	{
+		public static List<Individuo> GerarPopulacao(int quantidadeGeracao, int quantidadePosicoes)
+		{
 
-        public static List<ItemPopulacao> CriarPopulacao(int quantidadePopulacao, int qtdDirecoes)
-        {
-            List<ItemPopulacao> itemPopulacao = new List<ItemPopulacao>();
-            for (int i = 0; i < quantidadePopulacao; i++)
-            {
-                itemPopulacao.Add(Caminho(qtdDirecoes, Program.posicaoAtual));
-                ReiniciarPosicaoAtual();
-            }
-            return itemPopulacao;
-        }
+			List<Individuo> individuos = new List<Individuo>();
 
-        private static void ReiniciarPosicaoAtual()
-        {
-            Program.posicaoAtual.Linha = 1;
-            Program.posicaoAtual.Coluna = 0;
-        }
+			for (int i = 0; i < quantidadeGeracao; i++)
+			{
+				individuos.Add(new Individuo
+				{
+					valorFitnessTotal = 0,
+					posicoes = SorteioPosicao(quantidadePosicoes)
+				});
+			}
+			return individuos;
+		}
 
-        public static List<ItemPopulacao> Avaliacao(List<ItemPopulacao> populacao)
-        {
-            ItemPopulacao caminhosAux;
-            List<ItemPopulacao> caminhosAvaliados = new List<ItemPopulacao>();
-            var labirinto = Labirinto.getLabirinto();
+		public static List<Individuo> Avaliacao(List<Individuo> populacao)
+		{
 
-            foreach (var itemPopulacao in populacao)
-            {
-                foreach (var posicoes in itemPopulacao.caminhos)
-                {
-                    try
-                    {
-                        if (labirinto[posicoes.Linha, posicoes.Coluna].Contains("X"))
-                        {
-                            posicoes.valorFitness = -5;
-                        }
-                        else if (labirinto[posicoes.Linha, posicoes.Coluna].Contains(" "))
-                        {
-                            posicoes.valorFitness = +10;
-                        }
-                        else if (labirinto[posicoes.Linha, posicoes.Coluna].Contains("S"))
-                        {
-                            posicoes.valorFitness = +10000;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        posicoes.valorFitness = -10;
-                        //Se cair aqui, significa que o caminho seguiu pra fora do labirinto.      
-                    }
-                }
-                caminhosAux = new ItemPopulacao();
-                caminhosAux.caminhos = itemPopulacao.caminhos;
-                caminhosAux.valorFitnessTotal = CalcularValorFitnessTotal(itemPopulacao.caminhos);
-                caminhosAvaliados.Add(caminhosAux);
-            }
-            var populacaoAvaliada = caminhosAvaliados.OrderByDescending(x => x.valorFitnessTotal).ToList();
-            populacaoAvaliada.RemoveRange(populacaoAvaliada.Count / 2, populacaoAvaliada.Count / 2);
-            return populacaoAvaliada;
-        }
+			var labirinto = Labirinto.getLabirinto();
 
-        public static int CalcularValorFitnessTotal(List<Posicao> caminho)
-        {
-            int calculoValorFitness = 0;
+			foreach (var individuo in populacao)
+			{
+				individuo.valorFitnessTotal = 0;
+				foreach (var posicao in individuo.posicoes)
+				{
+					try
+					{
+						if (labirinto[posicao.Linha, posicao.Coluna].Contains("X"))
+						{
+							individuo.valorFitnessTotal -= 5;
+						}
+						else if (labirinto[posicao.Linha, posicao.Coluna].Contains(" "))
+						{
+							individuo.valorFitnessTotal += 10;
+						}
+						else if (labirinto[posicao.Linha, posicao.Coluna].Contains("S"))
+						{
+							individuo.valorFitnessTotal += 10000;
+						}
+						else
+						{
+							individuo.valorFitnessTotal += 10000;
+						}
+					}
+					catch (Exception)
+					{
+						individuo.valorFitnessTotal -= 10;
+					}
+				}
+			}
 
-            foreach (var direcao in caminho)
-            {
-                calculoValorFitness += direcao.valorFitness;
-            }
+			var populacaoOrdenada = populacao.OrderByDescending(x => x.valorFitnessTotal).ToList();
+			populacaoOrdenada.RemoveRange(populacao.Count / 2, populacao.Count / 2);
+			return populacaoOrdenada;
+		}
 
-            return calculoValorFitness;
-        }
 
-        public static ItemPopulacao Caminho(int quantDirecoes, Posicao posicaoAtual)
-        {
-            ItemPopulacao itemPopulacao = new ItemPopulacao();
-            List<Posicao> posicoes = new List<Posicao>();
-            for (int i = 0; i < quantDirecoes; i++)
-            {
-                posicoes.Add(Sorteio(posicaoAtual));
-            }
-            itemPopulacao.caminhos = posicoes;
-            return itemPopulacao;
-        }
+		public static List<Posicao> SorteioPosicao(int quantidadePosicao)
+		{
 
-        public static Posicao Sorteio(Posicao posicaoAtual)
-        {
-            int resultado = RandomNumber();
+			Posicao posicaoAtual = new Posicao(1, 0);
 
-            if (ultimaDirecao == 0)
-            {
-                do
-                {
-                    resultado = RandomNumber();
-                }
-                while (resultado == 2);
-            }
+			List<Posicao> posicoes = new List<Posicao>();
 
-            else if (ultimaDirecao == 2)
-            {
-                do
-                {
-                    resultado = RandomNumber();
-                }
-                while (resultado == 0);
-            }
+			for (int i = 0; i < quantidadePosicao; i++)
+			{
 
-            else if (ultimaDirecao == 1)
-            {
-                do
-                {
-                    resultado = RandomNumber();
-                }
-                while (resultado == 3);
-            }
+				int resultado = new Random().Next(0, 4);
 
-            else if (ultimaDirecao == 3)
-            {
-                do
-                {
-                    resultado = RandomNumber();
-                }
-                while (resultado == 1);
-            }
-            ultimaDirecao = resultado;
+				switch (resultado)
+				{
+					case 0:
+						posicaoAtual.Coluna -= 1;
+						break;
+					case 1:
+						posicaoAtual.Linha -= 1;
+						break;
+					case 2:
+						posicaoAtual.Coluna = +1;
+						break;
+					case 3:
+						posicaoAtual.Linha = +1;
+						break;
+				}
 
-            if (resultado == 0)
-            {
-                Program.posicaoAtual.Linha = Program.posicaoAtual.Linha;
-                Program.posicaoAtual.Coluna = Program.posicaoAtual.Coluna - 1;
-                return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
-            }
+				posicoes.Add(new Posicao
+				{
+					Linha = posicaoAtual.Linha,
+					Coluna = posicaoAtual.Coluna
+				});
+			}
 
-            if (resultado == 1)
-            {
-                Program.posicaoAtual.Linha = Program.posicaoAtual.Linha - 1;
-                Program.posicaoAtual.Coluna = Program.posicaoAtual.Coluna;
-                return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
-            }
+			return posicoes;
+		}
 
-            if (resultado == 2)
-            {
-                Program.posicaoAtual.Linha = Program.posicaoAtual.Linha;
-                Program.posicaoAtual.Coluna = Program.posicaoAtual.Coluna + 1;
-                return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
-            }
+		public static void GerarFilhos(ref List<Individuo> listaPais)
+		{
+			int index;
+			var tamanho = listaPais.Count;
+			for (int i = 0; i < tamanho; i++)
+			{
+				index = new Random().Next(0, listaPais.Count);
+				var filhoGerado = Cruzar(listaPais[i], listaPais[index]);
+				listaPais.Add(filhoGerado);
+			}
+		}
 
-            if (resultado == 3)
-            {
-                Program.posicaoAtual.Linha = Program.posicaoAtual.Linha + 1;
-                Program.posicaoAtual.Coluna = Program.posicaoAtual.Coluna;
-                return new Posicao { Linha = Program.posicaoAtual.Linha, Coluna = Program.posicaoAtual.Coluna };
-            }
-            return null;
-        }
+		public static Individuo Cruzar(Individuo pai, Individuo mae)
+		{
+			Individuo filho = new Individuo();
+			filho.posicoes = new List<Posicao>();
 
-        private static int RandomNumber(int min = 0, int max = 4)
-        {
-            return r.Next(min, max);
-        }
+			for (int i = 0; i < pai.posicoes.Count / 4; i++)
+			{
+				filho.posicoes.Add(pai.posicoes[i]);
+			}
+			for (int i = 0; i < mae.posicoes.Count / 4; i++)
+			{
+				filho.posicoes.Add(mae.posicoes[i]);
+			}
 
-        public static void GerarFilhos(ref List<ItemPopulacao> listaPais)
-        {
-            int index;
-            int tamanho = listaPais.Count;
-            for (int i = 0; i < tamanho; i++)
-            {
-                index = RandomNumber(0, listaPais.Count);
-                var filhoGerado = Cruzar(listaPais[i], listaPais[index]);
-                listaPais.Add(filhoGerado);
-            }
-        }
-
-        public static ItemPopulacao Cruzar(ItemPopulacao pai, ItemPopulacao mae)
-        {
-            ItemPopulacao filho = new ItemPopulacao();
-            filho.caminhos = new List<Posicao>();
-
-            for (int i = 0; i < pai.caminhos.Count / 4; i++)
-            {
-                filho.caminhos.Add(pai.caminhos[i]);
-            }
-            for (int i = 0; i < mae.caminhos.Count / 4; i++)
-            {
-                filho.caminhos.Add(mae.caminhos[i]);
-            }
-
-            for (int i = pai.caminhos.Count / 2; i < pai.caminhos.Count / 4; i++)
-            {
-                filho.caminhos.Add(pai.caminhos[i]);
-            }
-            for (int i = mae.caminhos.Count / 2; i < mae.caminhos.Count / 4; i++)
-            {
-                filho.caminhos.Add(mae.caminhos[i]);
-            }
-            return filho;
-        }
-    }
+			for (int i = pai.posicoes.Count / 2; i < pai.posicoes.Count / 4; i++)
+			{
+				filho.posicoes.Add(pai.posicoes[i]);
+			}
+			for (int i = mae.posicoes.Count / 2; i < mae.posicoes.Count / 4; i++)
+			{
+				filho.posicoes.Add(mae.posicoes[i]);
+			}
+			return filho;
+		}
+	}
 }
