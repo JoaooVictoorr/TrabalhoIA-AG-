@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TrabalhoDeIA
 {
-    class Individuo
+    public class Individuo
     {
         public int valorFitnessTotal;
         public List<Posicao> posicoes;
