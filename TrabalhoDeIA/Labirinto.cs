@@ -8,53 +8,25 @@ namespace TrabalhoDeIA
     {
         public static void Andar(List<Individuo> individuos)
         {
-            var labirinto = getLabirinto();
-
             foreach (var individuo in individuos)
             {
-                for (int i = 0; i <= individuo.posicoes.Count; i++)
+                var labirinto = getLabirinto();
+                int passo = 0;
+                foreach (var caminho in individuo.posicoes)
                 {
                     try
                     {
-                        Console.Clear();
-                        if(i + 1 <= individuo.posicoes.Count - 1)
-                        {
-                            labirinto[individuo.posicoes[i].Linha, individuo.posicoes[i].Coluna] = "*";
-                            labirinto[individuo.posicoes[i + 1].Linha, individuo.posicoes[i + 1].Coluna] = "C";
-                        }
-                        else
-                        {
-                            labirinto[individuo.posicoes[i].Linha, individuo.posicoes[i].Coluna] = "C";
-                        }
+                        labirinto[caminho.Linha, caminho.Coluna] = "*";
                         Imprime(labirinto);
-                        Thread.Sleep(50);
+                        Thread.Sleep(100);
+                        Console.Clear();
                     }
                     catch
                     {
-                        continue; //quando a posição sair para fora do labirinto, vai cair aqui e será ignorada na hora de print.
+                        continue; //se cair aqui, significa que foi pra fora do labirinto.
                     }
                 }
             }
-        }
-
-
-        public static List<Posicao> CaminhosLivres(string[,] posicaoAtual, Posicao coelho)
-        {
-            List<Posicao> caminho = new List<Posicao>();
-
-            if (posicaoAtual[coelho.Linha, coelho.Coluna - 1] == " ")
-                caminho.Add(new Posicao(coelho.Linha, coelho.Coluna - 1));
-
-            if (posicaoAtual[coelho.Linha - 1, coelho.Coluna] == " ")
-                caminho.Add(new Posicao(coelho.Linha - 1, coelho.Coluna));
-
-            if (posicaoAtual[coelho.Linha, coelho.Coluna + 1] == " ")
-                caminho.Add(new Posicao(coelho.Linha, coelho.Coluna + 1));
-
-            if (posicaoAtual[coelho.Linha + 1, coelho.Coluna] == " ")
-                caminho.Add(new Posicao(coelho.Linha + 1, coelho.Coluna));
-
-            return caminho;
         }
 
         public static void Imprime(string[,] labirinto)
@@ -70,7 +42,7 @@ namespace TrabalhoDeIA
                         Console.Write("[" + labirinto[i, j] + "]");
                         Console.ResetColor();
                     }
-                    else if (labirinto[i, j] == "C" || labirinto[i, j] == "*")
+                    else if (labirinto[i, j] == "*")
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGreen;
                         Console.ForegroundColor = ConsoleColor.White;
@@ -89,7 +61,6 @@ namespace TrabalhoDeIA
 
                     if (j == 20)
                         Console.Write("\n");
-
                 }
             }
             Console.WriteLine("\n");

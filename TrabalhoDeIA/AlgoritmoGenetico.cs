@@ -6,6 +6,7 @@ namespace TrabalhoDeIA
 {
 	class AlgoritmoGenetico
 	{
+        public static Random r = new Random();
 		public static List<Individuo> GerarPopulacao(int quantidadeGeracao, int quantidadePosicoes)
 		{
 
@@ -24,12 +25,11 @@ namespace TrabalhoDeIA
 
 		public static List<Individuo> Avaliacao(List<Individuo> populacao)
 		{
-
-			var labirinto = Labirinto.getLabirinto();
+            var labirinto = Labirinto.getLabirinto();
 
 			foreach (var individuo in populacao)
 			{
-				individuo.valorFitnessTotal = 0;
+				//individuo.valorFitnessTotal = 0;
 				foreach (var posicao in individuo.posicoes)
 				{
 					try
@@ -43,10 +43,6 @@ namespace TrabalhoDeIA
 							individuo.valorFitnessTotal += 10;
 						}
 						else if (labirinto[posicao.Linha, posicao.Coluna].Contains("S"))
-						{
-							individuo.valorFitnessTotal += 10000;
-						}
-						else
 						{
 							individuo.valorFitnessTotal += 10000;
 						}
@@ -66,7 +62,6 @@ namespace TrabalhoDeIA
 
 		public static List<Posicao> SorteioPosicao(int quantidadePosicao)
 		{
-
 			Posicao posicaoAtual = new Posicao(1, 0);
 
 			List<Posicao> posicoes = new List<Posicao>();
@@ -74,7 +69,7 @@ namespace TrabalhoDeIA
 			for (int i = 0; i < quantidadePosicao; i++)
 			{
 
-				int resultado = new Random().Next(0, 4);
+				int resultado = r.Next(0, 4);
 
 				switch (resultado)
 				{
@@ -85,10 +80,10 @@ namespace TrabalhoDeIA
 						posicaoAtual.Linha -= 1;
 						break;
 					case 2:
-						posicaoAtual.Coluna = +1;
+						posicaoAtual.Coluna +=1;
 						break;
 					case 3:
-						posicaoAtual.Linha = +1;
+						posicaoAtual.Linha += 1;
 						break;
 				}
 

@@ -12,14 +12,14 @@ namespace TrabalhoDeIA
         public static Posicao posicaoAtual = new Posicao(1, 0);
         static void Main(string[] args)
         {
-            var populacao = AlgoritmoGenetico.GerarPopulacao(10, 10);
+            var populacao = AlgoritmoGenetico.GerarPopulacao(10, 150);
             var populacaoSobrevivente = AlgoritmoGenetico.Avaliacao(populacao);
 
             while (true) //while para testar a redução da população
             {
                 AlgoritmoGenetico.GerarFilhos(ref populacaoSobrevivente);
                 populacaoSobrevivente = AlgoritmoGenetico.Avaliacao(populacaoSobrevivente);
-                Labirinto.Andar(populacaoSobrevivente);
+                Labirinto.Andar(populacao);
             }
         }
     }
